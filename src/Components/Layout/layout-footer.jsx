@@ -1,22 +1,22 @@
-import { Button, IconButton } from '@material-ui/core'
-import FacebookIcon from '@material-ui/icons/Facebook'
+import { Button, IconButton } from "@material-ui/core";
+import FacebookIcon from "@material-ui/icons/Facebook";
 // import TelegramIcon from '@material-ui/icons/Telegram';
-import GearIcon from '@material-ui/icons/Settings'
-import TwitterIcon from '@material-ui/icons/Twitter'
-import YouTubeIcon from '@material-ui/icons/YouTube'
-import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core'
-import { FortmaticConnector } from '@web3-react/fortmatic-connector'
+import GearIcon from "@material-ui/icons/Settings";
+import TwitterIcon from "@material-ui/icons/Twitter";
+import YouTubeIcon from "@material-ui/icons/YouTube";
+import { UnsupportedChainIdError, useWeb3React } from "@web3-react/core";
+import { FortmaticConnector } from "@web3-react/fortmatic-connector";
 import {
   InjectedConnector,
   NoEthereumProviderError,
   UserRejectedRequestError,
-} from '@web3-react/injected-connector'
-import { WalletConnectConnector } from '@web3-react/walletconnect-connector'
-import { useCallback, useEffect, useState } from 'react'
-import { isMobile } from 'react-device-detect'
+} from "@web3-react/injected-connector";
+import { WalletConnectConnector } from "@web3-react/walletconnect-connector";
+import { useCallback, useEffect, useState } from "react";
+import { isMobile } from "react-device-detect";
 // import DiscordIcon from '../../assets/images/icons/discord.svg';
-import CreditsImage from '../../assets/images/icons/created-by.png'
-import { setWeb3Provider } from '../../contracts/getContract'
+import CreditsImage from "../../assets/images/icons/created-by.png";
+import { setWeb3Provider } from "../../contracts/getContract";
 import {
   useDropInputs,
   // useJWT,
@@ -24,117 +24,122 @@ import {
   useSnackbar,
   // useTheme,
   useWeb3,
-} from '../../hooks'
-import { useStyles } from './connectWalletStyles'
-import { conciseAddress } from '../../utils/formattingFunctions'
-import { walletList } from '../../utils/web3Connectors'
-import WalletDialog from '../wallet-dialog'
+} from "../../hooks";
+import { useStyles } from "./connectWalletStyles";
+import { conciseAddress } from "../../utils/formattingFunctions";
+import { walletList } from "../../utils/web3Connectors";
+import WalletDialog from "../wallet-dialog";
 
 const LayoutFooter = () => {
-  const classes = useStyles()
-  const web3context = useWeb3React()
-  const { showSnackbarF } = useSnackbar()
-  const { setLoadingF, loading } = useLoading()
-  const { storeWeb3ContextF } = useWeb3()
-  const { currentAccount, clearFieldsF } = useDropInputs()
+  const classes = useStyles();
+  const web3context = useWeb3React();
+  const { showSnackbarF } = useSnackbar();
+  const { setLoadingF, loading } = useLoading();
+  const { storeWeb3ContextF } = useWeb3();
+  const { currentAccount, clearFieldsF } = useDropInputs();
   // const { theme } = useTheme();
   // const { getJWTF } = useJWT();
 
-  const [open, setOpen] = useState(false)
+  const [open, setOpen] = useState(false);
 
   const getErrorMessage = (e) => {
     if (e instanceof UnsupportedChainIdError) {
-      return 'Unsupported Network'
-    } if (e instanceof NoEthereumProviderError) {
-      return 'No Wallet Found'
-    } if (e instanceof UserRejectedRequestError) {
-      return 'Wallet Connection Rejected'
-    } if (e.code === -32002) {
-      return 'Wallet Connection Request Pending'
+      return "Unsupported Network";
     }
-    return 'An Error Occurred'
-  }
+    if (e instanceof NoEthereumProviderError) {
+      return "No Wallet Found";
+    }
+    if (e instanceof UserRejectedRequestError) {
+      return "Wallet Connection Rejected";
+    }
+    if (e.code === -32002) {
+      return "Wallet Connection Request Pending";
+    }
+    return "An Error Occurred";
+  };
 
   const activateWallet = useCallback(
     (connector, onClose = () => {}) => {
       setLoadingF({
         walletConnection: true,
         connector: connector || InjectedConnector,
-      })
+      });
 
       if (
-        connector instanceof WalletConnectConnector
-        && connector.walletConnectProvider?.wc?.uri
+        connector instanceof WalletConnectConnector &&
+        connector.walletConnectProvider?.wc?.uri
       ) {
-        connector.walletConnectProvider = undefined // eslint-disable-line no-param-reassign
+        connector.walletConnectProvider = undefined; // eslint-disable-line no-param-reassign
       } else if (connector instanceof FortmaticConnector) {
-        onClose()
+        onClose();
       }
 
       web3context
         .activate(
-          connector || new InjectedConnector({
-            supportedChainIds: [1, 3, 4, 5, 42],
-          }),
+          connector ||
+            new InjectedConnector({
+              supportedChainIds: [1, 3, 4, 5, 42],
+            }),
           undefined,
-          true,
+          true
         )
         .then(() => {
-          setLoadingF({ walletConnection: false })
+          setLoadingF({ walletConnection: false });
           // getJWTF(web3context.account, Date.now());
         })
         .catch((e) => {
-          const err = getErrorMessage(e)
-          showSnackbarF({ message: err, severity: 'error' })
-          console.error('ERROR activateWallet -> ', e)
-          setLoadingF({ walletConnection: false })
-        })
+          const err = getErrorMessage(e);
+          showSnackbarF({ message: err, severity: "error" });
+          console.error("ERROR activateWallet -> ", e);
+          setLoadingF({ walletConnection: false });
+        });
     },
-    [web3context, loading],
-  )
+    [web3context, loading]
+  );
 
   useEffect(() => {
     if (!isMobile) {
-      activateWallet()
+      activateWallet();
     }
-  }, [])
+  }, []);
 
   useEffect(() => {
-    storeWeb3ContextF(web3context)
-    if (web3context?.library?._provider) { // eslint-disable-line no-underscore-dangle
+    storeWeb3ContextF(web3context);
+    if (web3context?.library?._provider) {
+      // eslint-disable-line no-underscore-dangle
       // console.log(web3context.library._provider);
-      setWeb3Provider(web3context.library._provider) // eslint-disable-line no-underscore-dangle
+      setWeb3Provider(web3context.library._provider); // eslint-disable-line no-underscore-dangle
     }
     if (web3context?.error) {
-      web3context.deactivate()
+      web3context.deactivate();
     }
     if (web3context.active || web3context.account) {
-      setOpen(false)
-      if (currentAccount === '') {
-        clearFieldsF(web3context.account)
+      setOpen(false);
+      if (currentAccount === "") {
+        clearFieldsF(web3context.account);
         // getJWTF(web3context.account, Date.now());
       }
     }
-  }, [web3context])
+  }, [web3context]);
 
-  window.ethereum?.on('networkChanged', (networkId) => {
-    clearFieldsF()
+  window.ethereum?.on("networkChanged", (networkId) => {
+    clearFieldsF();
     if (networkId) {
-      let msg = 'Network changed to '
-      if (networkId === '1') {
-        msg += 'mainnet'
-      } else if (networkId === '3') {
-        msg += 'ropsten'
-      } else if (networkId === '4') {
-        msg += 'rinkeby'
-      } else if (networkId === '5') {
-        msg += 'goerli'
-      } else if (networkId === '42') {
-        msg += 'kovan'
+      let msg = "Network changed to ";
+      if (networkId === "1") {
+        msg += "mainnet";
+      } else if (networkId === "3") {
+        msg += "ropsten";
+      } else if (networkId === "4") {
+        msg += "rinkeby";
+      } else if (networkId === "5") {
+        msg += "goerli";
+      } else if (networkId === "42") {
+        msg += "kovan";
       }
-      showSnackbarF({ message: msg, severity: 'info' })
+      showSnackbarF({ message: msg, severity: "info" });
     }
-  })
+  });
 
   return (
     <div className="text-center">
@@ -146,7 +151,7 @@ const LayoutFooter = () => {
           <span className="mr-4 ">
             {web3context.active && web3context.account
               ? conciseAddress(web3context.account)
-              : 'CONNECT WALLET'}
+              : "CONNECT WALLET"}
           </span>
           <span className="connect-icon d-flex align-self-center">
             <GearIcon style={{ fontSize: 18 }} />
@@ -160,10 +165,10 @@ const LayoutFooter = () => {
           <img src={CreditsImage} alt="" width={150} />
         </a>
       </div>
-      <div className="social-links" style={{ paddingBottom: '3rem' }}>
+      <div className="social-links" style={{ paddingBottom: "3rem" }}>
         <a href="https://discord.gg/w3pgm7R6" target="_blank" rel="noreferrer">
           <IconButton size="small" aria-label="Twitter" className="footer-icon">
-            <div style={{ width: '18px', height: '18px', fill: 'white' }}>
+            <div style={{ width: "18px", height: "18px", fill: "white" }}>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 294334 333333"
@@ -189,21 +194,34 @@ const LayoutFooter = () => {
             </div>
           </IconButton>
         </a>
-        <a href="https://twitter.com/blockzerolabs" target="_blank" rel="noreferrer">
+        <a
+          href="https://twitter.com/blockzerolabs"
+          target="_blank"
+          rel="noreferrer"
+        >
           <IconButton size="small" aria-label="Twitter" className="footer-icon">
-            {' '}
             <TwitterIcon style={{ fontSize: 18 }} />
           </IconButton>
         </a>
-        <a href="https://www.youtube.com/c/bombx" target="_blank" rel="noreferrer">
+        <a
+          href="https://www.youtube.com/c/bombx"
+          target="_blank"
+          rel="noreferrer"
+        >
           <IconButton size="small" aria-label="Youtube" className="footer-icon">
-            {' '}
             <YouTubeIcon style={{ fontSize: 18 }} />
           </IconButton>
         </a>
-        <a href="https://www.facebook.com/groups/xionetwork" target="_blank" rel="noreferrer">
-          <IconButton size="small" aria-label="Facebook" className="footer-icon">
-            {' '}
+        <a
+          href="https://www.facebook.com/groups/xionetwork"
+          target="_blank"
+          rel="noreferrer"
+        >
+          <IconButton
+            size="small"
+            aria-label="Facebook"
+            className="footer-icon"
+          >
             <FacebookIcon style={{ fontSize: 18 }} />
           </IconButton>
         </a>
@@ -218,6 +236,6 @@ const LayoutFooter = () => {
         address={conciseAddress(web3context.account)}
       />
     </div>
-  )
-}
-export default LayoutFooter
+  );
+};
+export default LayoutFooter;

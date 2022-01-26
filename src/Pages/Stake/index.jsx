@@ -69,7 +69,7 @@ const Stake = ({ location, size }) => {
     setExpanded(isExpanded ? panel : false)
   }
   const [value, setValue] = useState(tabNo)
-  const [modal, setModal] = useState({ show: false, onClose }) // eslint-disable-line @typescript-eslint/no-use-before-define
+  const [modal, setModal] = useState({ show: false, onClose })
   const [selectedPortalStake, setSelectedPortalStake] = useState()
   const [selectTokenOptionsStake, setSelectTokenOptionsStake] = useState()
   const [quantityStake, setQuantityStake] = useState()
@@ -78,10 +78,10 @@ const Stake = ({ location, size }) => {
   const [filteredPortals, setFilteredPortals] = useState()
   const [selectedPortalOptionStake, setSelectedPortalOptionStake] = useState('')
   const [selectedPortalOptionClaim, setSelectedPortalOptionClaim] = useState('')
-  const [tokenContractAddressStake, setTokenContractAddressStake] = useState() // eslint-disable-line @typescript-eslint/no-unused-vars
+  const [tokenContractAddressStake, setTokenContractAddressStake] = useState()
 
-  const [selectTokenOptionsClaim, setSelectTokenOptionsClaim] = useState() // eslint-disable-line @typescript-eslint/no-unused-vars
-  const [tokenContractAddressClaim, setTokenContractAddressClaim] = useState() // eslint-disable-line @typescript-eslint/no-unused-vars
+  const [selectTokenOptionsClaim, setSelectTokenOptionsClaim] = useState()
+  const [tokenContractAddressClaim, setTokenContractAddressClaim] = useState()
   const [selectedPortalClaim, setSelectedPortalClaim] = useState()
   const [claimData, setClaimData] = useState()
   const [searchValue, setSearchValue] = useState('')
@@ -115,7 +115,7 @@ const Stake = ({ location, size }) => {
     claimEffect()
   }, [selectedPortalClaim, portals, account])
 
-  const [_, setTotalCount] = useState('X') // eslint-disable-line @typescript-eslint/naming-convention, @typescript-eslint/no-unused-vars
+  const [_, setTotalCount] = useState('X')
 
   const paginationArr = (arr) => arr?.reduce((resultArray, item, index) => {
     const result = resultArray
@@ -258,20 +258,14 @@ const Stake = ({ location, size }) => {
             <div>
               <p>
                 Your stake of
-                {' '}
                 <b>
-                  {quantityStake}
-                  {' '}
-                  {selectTokenOptionsStake}
+                  {` ${quantityStake} ${selectTokenOptionsStake} `}
                 </b>
-                {' '}
                 will start after successful confirmation.
               </p>
               <p>
                 You may need to approve a one-off transaction to allow your
-                {' '}
-                <b>{selectTokenOptionsStake}</b>
-                {' '}
+                <b>{` ${selectTokenOptionsStake} `}</b>
                 to be used.
               </p>
             </div>
@@ -359,16 +353,13 @@ const Stake = ({ location, size }) => {
         <div style={{ textAlign: 'left' }}>
           <p>
             You are claiming your rewards from
-            {' '}
-            <b>{selectedPortalOptionClaim}</b>
-            {' '}
+            <b>{` ${selectedPortalOptionClaim} `}</b>
             as follows:
           </p>
           <div>
             <p>
               <FontAwesomeIcon icon={faCheck} />
-              {' '}
-              Reward Tokens :
+              {' Reward Tokens :'}
               {portals
                 .filter(
                   (item) => item.label === selectedPortalOptionClaim,
@@ -378,8 +369,7 @@ const Stake = ({ location, size }) => {
             </p>
             <p>
               <FontAwesomeIcon icon={faCheck} />
-              {' '}
-              Amount :
+              {' Amount :'}
               {claimData.length === 0
                 ? portals
                   .filter(
@@ -396,16 +386,13 @@ const Stake = ({ location, size }) => {
         <div style={{ textAlign: 'left' }}>
           <p>
             You are claiming your rewards from
-            {' '}
-            <b>{selectedPortalOptionClaim}</b>
-            {' '}
+            <b>{` ${selectedPortalOptionClaim} `}</b>
             as follows:
           </p>
           <div>
             <p>
               <FontAwesomeIcon icon={faCheck} />
-              {' '}
-              Reward Tokens :
+              {' Reward Tokens :'}
               {portals
                 .filter(
                   (item) => item.label === selectedPortalOptionClaim,
@@ -415,8 +402,7 @@ const Stake = ({ location, size }) => {
             </p>
             <p>
               <FontAwesomeIcon icon={faCheck} />
-              {' '}
-              Amount :
+              {' Amount :'}
               {claimData.length === 0
                 ? portals
                   .filter(
@@ -473,9 +459,9 @@ const Stake = ({ location, size }) => {
     (
       selectItemsData,
       select,
-      setModal, // eslint-disable-line @typescript-eslint/no-shadow
+      setModal,
       title,
-      isToken = false, // eslint-disable-line @typescript-eslint/default-param-last
+      isToken = false,
       setSelectTokenOptions,
       setTokenContractAddress,
       setSelectedPortal,
@@ -585,11 +571,7 @@ const Stake = ({ location, size }) => {
           <div className="yield-pagination text-center mt-2 d-flex align-items-center justify-content-center">
             {/* <span className="page-number">1 of 6</span> */}
             <span className="page-number">
-              {pagination.currentPage}
-              {' '}
-              of
-              {' '}
-              {pagination.pageSize}
+              {`${pagination.currentPage} of ${pagination.pageSize}`}
             </span>
             <span className="pagination-control ml-4 d-flex align-self-center">
               <NavigateBeforeIcon
@@ -770,8 +752,7 @@ const Stake = ({ location, size }) => {
                                   )
                                 }}
                               >
-                                25%
-                                {' '}
+                                {'25% '}
                               </span>
                               <span
                                 role="button"
@@ -784,8 +765,7 @@ const Stake = ({ location, size }) => {
                                   )
                                 }}
                               >
-                                50%
-                                {' '}
+                                {'50% '}
                               </span>
                               <span
                                 role="button"
@@ -798,8 +778,7 @@ const Stake = ({ location, size }) => {
                                   )
                                 }}
                               >
-                                MAX
-                                {' '}
+                                {'MAX '}
                               </span>
                             </span>
                           )}

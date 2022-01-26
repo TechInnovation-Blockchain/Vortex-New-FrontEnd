@@ -1,41 +1,41 @@
-import Accordion from '@material-ui/core/Accordion'
-import AccordionDetails from '@material-ui/core/AccordionDetails'
-import AccordionSummary from '@material-ui/core/AccordionSummary'
-import { makeStyles } from '@material-ui/core/styles'
-import Tooltip from '@material-ui/core/Tooltip'
-import Typography from '@material-ui/core/Typography'
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
-import InfoIcon from '@material-ui/icons/Info'
-import React from 'react'
-import AquaIcon from '../../assets/images/icons/aqua.webp'
-import FlashIcon from '../../assets/images/icons/FLASH.webp'
-import UmaIcon from '../../assets/images/icons/UMA.webp'
-import { InputText } from '../../Components'
-import ThemeModal from '../../Components/theme-modal'
+import Accordion from "@material-ui/core/Accordion";
+import AccordionDetails from "@material-ui/core/AccordionDetails";
+import AccordionSummary from "@material-ui/core/AccordionSummary";
+import { makeStyles } from "@material-ui/core/styles";
+import Tooltip from "@material-ui/core/Tooltip";
+import Typography from "@material-ui/core/Typography";
+import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import InfoIcon from "@material-ui/icons/Info";
+import React from "react";
+import AquaIcon from "../../assets/images/icons/aqua.webp";
+import FlashIcon from "../../assets/images/icons/FLASH.webp";
+import UmaIcon from "../../assets/images/icons/UMA.webp";
+import { InputText } from "../../Components";
+import ThemeModal from "../../Components/theme-modal";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    width: '100%',
-    fontFamily: 'Montserrat, sans-serif',
+    width: "100%",
+    fontFamily: "Montserrat, sans-serif",
   },
   heading: {
     fontSize: theme.typography.pxToRem(26),
-    fontFamily: 'Montserrat, sans-serif',
-    flexBasis: '100%',
+    fontFamily: "Montserrat, sans-serif",
+    flexBasis: "100%",
   },
   content: {
     fontSize: theme.typography.pxToRem(26),
-    fontFamily: 'Montserrat, sans-serif',
+    fontFamily: "Montserrat, sans-serif",
   },
-}))
+}));
 
 const Portal = () => {
-  const classes = useStyles()
-  const [expanded, setExpanded] = React.useState(false)
+  const classes = useStyles();
+  const [expanded, setExpanded] = React.useState(false);
 
   const handleChange = (panel) => (event, isExpanded) => {
-    setExpanded(isExpanded ? panel : false)
-  }
+    setExpanded(isExpanded ? panel : false);
+  };
   const content = () => (
     <div className="portal-container">
       <div className="search-portal mb-5">
@@ -50,12 +50,12 @@ const Portal = () => {
       </div>
       <div className={`portal-list ${classes.root}`}>
         <Accordion
-          expanded={expanded === 'panel1'}
+          expanded={expanded === "panel1"}
           className="accordion-outer"
-          onChange={handleChange('panel1')}
+          onChange={handleChange("panel1")}
         >
           <AccordionSummary
-            expandIcon={<ExpandMoreIcon style={{ color: 'white' }} />}
+            expandIcon={<ExpandMoreIcon style={{ color: "white" }} />}
             aria-controls="panel1bh-content"
             id="panel1bh-header"
           >
@@ -69,41 +69,33 @@ const Portal = () => {
           <AccordionDetails className="pt-0">
             <Typography
               className={classes.content}
-              style={{ width: '100%', paddingTop: 0 }}
+              style={{ width: "100%", paddingTop: 0 }}
             >
-              <div className="text-center" style={{ width: '100%' }}>
+              <div className="text-center" style={{ width: "100%" }}>
                 <p>Yield Token Breakdown</p>
-                <div style={{ opacity: '0.8' }}>
+                <div style={{ opacity: "0.8" }}>
                   <p className="d-flex justify-content-center gap-1  align-items-center">
                     <img src={FlashIcon} alt="" width={20} />
                     <span>
-                      FLASH
-                      {' '}
-                      <span className="primaryText">(100% APU) </span>
+                      FLASH <span className="primaryText">(100% APU) </span>
                     </span>
                     <Tooltip title="Really interesting">
                       <InfoIcon />
                     </Tooltip>
-                  </p>
-                  {' '}
+                  </p>{" "}
                   <p className="d-flex justify-content-center gap-1  align-items-center">
                     <img src={AquaIcon} alt="" width={20} />
                     <span>
-                      AQUA
-                      {' '}
-                      <span className="primaryText">(50% APU)</span>
+                      AQUA <span className="primaryText">(50% APU)</span>
                     </span>
                     <Tooltip title="Really interesting">
                       <InfoIcon />
                     </Tooltip>
-                  </p>
-                  {' '}
+                  </p>{" "}
                   <p className="d-flex justify-content-center gap-1  align-items-center">
                     <img src={UmaIcon} alt="" width={20} />
                     <span>
-                      UMA
-                      {' '}
-                      <span className="primaryText">(2% APU)</span>
+                      UMA <span className="primaryText">(2% APU)</span>
                     </span>
                     <Tooltip title="Really interesting">
                       <InfoIcon />
@@ -115,21 +107,19 @@ const Portal = () => {
           </AccordionDetails>
         </Accordion>
         <Accordion
-          expanded={expanded === 'panel2'}
+          expanded={expanded === "panel2"}
           className="accordion-outer"
-          onChange={handleChange('panel2')}
+          onChange={handleChange("panel2")}
         >
           <AccordionSummary
-            expandIcon={<ExpandMoreIcon style={{ color: 'white' }} />}
+            expandIcon={<ExpandMoreIcon style={{ color: "white" }} />}
             aria-controls="panel2bh-content"
             id="panel2bh-header"
           >
             <Typography
               className={`${classes.heading} d-flex justify-content-between`}
             >
-              VORTEX2
-              {' '}
-              <span className="primaryText">(52% APY)</span>
+              VORTEX2 <span className="primaryText">(52% APY)</span>
             </Typography>
           </AccordionSummary>
           <AccordionDetails>
@@ -137,21 +127,19 @@ const Portal = () => {
           </AccordionDetails>
         </Accordion>
         <Accordion
-          expanded={expanded === 'panel3'}
+          expanded={expanded === "panel3"}
           className="accordion-outer"
-          onChange={handleChange('panel3')}
+          onChange={handleChange("panel3")}
         >
           <AccordionSummary
-            expandIcon={<ExpandMoreIcon style={{ color: 'white' }} />}
+            expandIcon={<ExpandMoreIcon style={{ color: "white" }} />}
             aria-controls="panel2bh-content"
             id="panel2bh-header"
           >
             <Typography
               className={`${classes.heading} d-flex justify-content-between`}
             >
-              AQUAFI
-              {' '}
-              <span className="primaryText">(12% APY)</span>
+              AQUAFI <span className="primaryText">(12% APY)</span>
             </Typography>
           </AccordionSummary>
           <AccordionDetails>
@@ -159,21 +147,19 @@ const Portal = () => {
           </AccordionDetails>
         </Accordion>
         <Accordion
-          expanded={expanded === 'panel4'}
+          expanded={expanded === "panel4"}
           className="accordion-outer"
-          onChange={handleChange('panel4')}
+          onChange={handleChange("panel4")}
         >
           <AccordionSummary
-            expandIcon={<ExpandMoreIcon style={{ color: 'white' }} />}
+            expandIcon={<ExpandMoreIcon style={{ color: "white" }} />}
             aria-controls="panel2bh-content"
             id="panel2bh-header"
           >
             <Typography
               className={`${classes.heading} d-flex justify-content-between`}
             >
-              RANDOM
-              {' '}
-              <span className="primaryText">(175% APY)</span>
+              RANDOM <span className="primaryText">(175% APY)</span>
             </Typography>
           </AccordionSummary>
           <AccordionDetails>
@@ -182,8 +168,8 @@ const Portal = () => {
         </Accordion>
       </div>
     </div>
-  )
+  );
 
-  return <ThemeModal show Content={content} />
-}
-export default Portal
+  return <ThemeModal show Content={content} />;
+};
+export default Portal;

@@ -1,5 +1,5 @@
-import { Typography } from '@material-ui/core'
-import ThemeModal from '../../Components/theme-modal'
+import { Typography } from "@material-ui/core";
+import ThemeModal from "../../Components/theme-modal";
 
 const StakeComplete = () => {
   const content = () => (
@@ -17,29 +17,25 @@ const StakeComplete = () => {
           />
         </svg>
         <Typography>
-          <p style={{ fontSize: '24px' }} className="mb-4">
+          <p style={{ fontSize: "24px" }} className="mb-4">
             STAKE COMPLETE
           </p>
           <p className="text">
-            <span className="primaryText">10,000 XIO</span>
-            {' '}
-            tokens to be vested
-            from
-            <span className="primaryText">03.10.2021</span>
-            {' '}
+            <span className="primaryText">{"10,000 XIO "}</span>
+            tokens to be vested from
+            <span className="primaryText">{"03.10.2021 "}</span>
             to
-            {' '}
-            <span className="primaryText">03.10.2021</span>
+            <span className="primaryText">{" 03.10.2021"}</span>
           </p>
         </Typography>
       </div>
     </>
-  )
+  );
   return (
     <>
       <ThemeModal show Content={content} />
     </>
-  )
-}
+  );
+};
 
-export default StakeComplete
+export default StakeComplete;
