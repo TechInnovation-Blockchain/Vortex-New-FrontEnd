@@ -1499,7 +1499,7 @@ const Deposit = ({ location, size }) => {
         show={showTokenModal}
         onClose={() => setShowTokenModal(false)}
       >
-        <h2 style={{textAlign: 'center'}}>Add Token</h2>
+        <h2 style={{textAlign: 'center'}}>Add New Reward Tokens</h2>
         <div style={{ padding: "1rem" }}>
           <TokenSection
             selectedTokenList={selectedTokenList}
