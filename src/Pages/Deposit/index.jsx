@@ -45,6 +45,7 @@ import DepositDashboard from "../DepositDashboard";
 import { store } from "../../redux/store";
 import { dataLoading } from "../../redux/actions/loadingActions";
 import ThemeResponse from "../../Components/theme-response";
+import TokenSection from "../../Components/token-section";
 
 const Deposit = ({ location, size }) => {
   const loadingData = useSelector((state) => state.loading);
@@ -58,7 +59,9 @@ const Deposit = ({ location, size }) => {
   const [tokenAddress, setTokenAddress] = useState("");
   const [minRewardRatio, setMinRewardRatio] = useState(0);
   const [tokenArr, setTokenArr] = useState([]);
+  const [tokenArrDeposit, setTokenArrDeposit] = useState([]);
   const [selectedTokenList, setSelectedTokenList] = useState();
+  const [selectedTokenListDefault, setSelectedTokenListDefault] = useState();
   const [selectedPortal, setSelectedPortal] = useState();
   const [tokenResponse, setTokenResponse] = useState("");
   const [smallFont, setSmallFont] = useState(false);
@@ -70,6 +73,7 @@ const Deposit = ({ location, size }) => {
   const [searchSmallFont, setSearchSmallFont] = useState("");
   const [showTokenModalCreate, setShowTokenModalCreate] = useState(false);
   const [modal, setModal] = useState({ show: false, onClose });
+  const [showTokenModal, setShowTokenModal] = useState(false);
   const [selectedPortalOptionDeposit, setSelectedPortalOptionDeposit] =
     useState("");
   const [selectedTokenOptionDeposit, setSelectedTokenOptionDeposit] =
@@ -285,6 +289,7 @@ const Deposit = ({ location, size }) => {
       (item) => item.address === selectedPortal
     );
     setSelectedTokenList(rewardsTokens[0]?.rewardTokenNames);
+    setSelectedTokenListDefault(rewardsTokens[0]?.rewardTokenNames);
   }, [selectedPortal, portalOptionsNew]);
 
   useEffect(() => {
@@ -481,6 +486,49 @@ const Deposit = ({ location, size }) => {
     setTokenResponse("");
   };
 
+  const addTokenDeposit = () => {
+    // eslint-disable-line consistent-return
+    if (
+      !(
+        minRewardRatio &&
+        minRewardRatio > 0 &&
+        Number(minRewardRatio) &&
+        tokenAddress &&
+        tokenAddress.trim() &&
+        tokenAddress.length ===
+          "0x2b591e99afe9f32eaa6214f7b7629768c40eeb39".length &&
+        tokenResponse
+      )
+    ) {
+      setTimeout(() => {
+        setAddTokenError("");
+      }, 5000);
+      return setAddTokenError(
+        "Please enter Token Address and Min Reward Ratio to add"
+      );
+    }
+
+    setMinRewardRatio(0);
+    setTokenAddress("");
+    for (let i = 0; i < tokenArr.length; i += 1) {
+      if (tokenArr[i].token_address === tokenAddress) {
+        setAddTokenError("Duplicate Token Address");
+        return; // eslint-disable-line consistent-return
+      }
+    }
+    setTokenArrDeposit([
+      ...tokenArrDeposit,
+      {
+        token_address: tokenAddress,
+        token_name: tokenResponse,
+        min_reward_ratio: minRewardRatio,
+      },
+    ]);
+
+    setAddTokenError("");
+    setTokenResponse("");
+  };
+
   useEffect(() => {
     if (!tokenArr.length) return;
 
@@ -589,7 +637,8 @@ const Deposit = ({ location, size }) => {
       if (token) {
         const tokenName = await getName(token);
         if (web3.utils.isAddress(token) && tokenName) {
-          setTokenResponse(tokenName);
+          console.log("tokenName", tokenName, typeof tokenName);
+          setTokenResponse(tokenName ? tokenName : "Unknown Token");
         } else {
           setTokenResponse("invalid token address");
         }
@@ -653,6 +702,7 @@ const Deposit = ({ location, size }) => {
         .toFixed(4)
         .toString();
     }
+    console.log("quantity", temp);
     setQuantity(temp);
   };
 
@@ -1087,113 +1137,116 @@ const Deposit = ({ location, size }) => {
                     />
                   </div>
 
-                  {selectedTokenList ? (
-                    <div
-                      className="select-box mb-4"
-                      // style={{ marginLeft: "5px" }}
-                      style={{
-                        width: "100%",
-                      }}
-                    >
-                      {selectedTokenList?.map((item, index) => (
-                        <div
-                          style={{
-                            display: "flex",
-                            justifyContent: "space-between",
-                          }}
-                        >
+                  {selectedTokenList && (
+                    <>
+                      <div
+                        className="select-box mb-4"
+                        style={{ width: "100%" }}
+                      >
+                        {selectedTokenList?.map((item, index) => (
                           <div
-                            key={index} // eslint-disable-line react/no-array-index-key
                             style={{
                               display: "flex",
                               justifyContent: "space-between",
                             }}
                           >
                             <div
+                              key={index} // eslint-disable-line react/no-array-index-key
                               style={{
-                                background: `url(${UmaIcon}) no-repeat`,
-                                backgroundSize: "cover",
-                                width: 15,
-                                height: 15,
-                                alignSelf: "center",
-                                marginLeft: "10px",
-                              }}
-                            />
-                            <h5
-                              style={{
-                                margin: 0,
-                                marginLeft: "5px",
-                                color: "rgb(197, 197, 197)",
-                                lineHeight: "9.8rem",
+                                display: "flex",
+                                justifyContent: "space-between",
                               }}
                             >
-                              {item.length > 15
-                                ? `${item.substr(0, 15)}...`
-                                : `${item}`}
-                            </h5>
+                              <div
+                                style={{
+                                  background: `url(${UmaIcon}) no-repeat`,
+                                  backgroundSize: "cover",
+                                  width: 15,
+                                  height: 15,
+                                  alignSelf: "center",
+                                  marginLeft: "10px",
+                                }}
+                              />
+                              <h5
+                                style={{
+                                  margin: 0,
+                                  marginLeft: "5px",
+                                  color: "rgb(197, 197, 197)",
+                                  lineHeight: "9.8rem",
+                                }}
+                              >
+                                {item.length > 15
+                                  ? `${item.substr(0, 15)}...`
+                                  : `${item}`}
+                              </h5>
+                            </div>
+                            <div
+                              className="col-md-6 col-6"
+                              style={{ padding: "5px" }}
+                            >
+                              <InputText2
+                                type="text"
+                                value={quantity[index]}
+                                onChange={(e) =>
+                                  handleQuantityChange(
+                                    index,
+                                    e.target.value,
+                                    true
+                                  )
+                                }
+                                sublabel={
+                                  <span className="d-flex align-items-center gap-1">
+                                    <span
+                                      className="text-light text-right pointer quantity-limit"
+                                      onClick={() =>
+                                        handleQuantityChange(index, 25)
+                                      }
+                                      role="button"
+                                      tabIndex={0}
+                                      onKeyDown={() => {}}
+                                    >
+                                      25%{" "}
+                                    </span>
+                                    <span
+                                      className="text-light ml-2 text-right pointer quantity-limit"
+                                      onClick={() =>
+                                        handleQuantityChange(index, 50)
+                                      }
+                                      role="button"
+                                      tabIndex={0}
+                                      onKeyDown={() => {}}
+                                    >
+                                      50%{" "}
+                                    </span>
+                                    <span
+                                      className="primaryText quantity-primary ml-2 text-right pointer quantity-limit"
+                                      onClick={() =>
+                                        handleQuantityChange(index, 100)
+                                      }
+                                      role="button"
+                                      tabIndex={0}
+                                      onKeyDown={() => {}}
+                                    >
+                                      MAX{" "}
+                                    </span>
+                                  </span>
+                                }
+                                placeholder={0.0}
+                                style={{
+                                  fontSize: "10px !important",
+                                }}
+                              />
+                            </div>
                           </div>
-                          <div
-                            className="col-md-6 col-6"
-                            style={{ padding: "5px" }}
-                          >
-                            <InputText2
-                              type="text"
-                              value={quantity[index]}
-                              onChange={(e) =>
-                                handleQuantityChange(
-                                  index,
-                                  e.target.value,
-                                  true
-                                )
-                              }
-                              sublabel={
-                                <span className="d-flex align-items-center gap-1">
-                                  <span
-                                    className="text-light text-right pointer quantity-limit"
-                                    onClick={() =>
-                                      handleQuantityChange(index, 25)
-                                    }
-                                    role="button"
-                                    tabIndex={0}
-                                    onKeyDown={() => {}}
-                                  >
-                                    25%{" "}
-                                  </span>
-                                  <span
-                                    className="text-light ml-2 text-right pointer quantity-limit"
-                                    onClick={() =>
-                                      handleQuantityChange(index, 50)
-                                    }
-                                    role="button"
-                                    tabIndex={0}
-                                    onKeyDown={() => {}}
-                                  >
-                                    50%{" "}
-                                  </span>
-                                  <span
-                                    className="primaryText quantity-primary ml-2 text-right pointer quantity-limit"
-                                    onClick={() =>
-                                      handleQuantityChange(index, 100)
-                                    }
-                                    role="button"
-                                    tabIndex={0}
-                                    onKeyDown={() => {}}
-                                  >
-                                    MAX{" "}
-                                  </span>
-                                </span>
-                              }
-                              placeholder={0.0}
-                              style={{
-                                fontSize: "10px !important",
-                              }}
-                            />
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  ) : (
-                    <></>
+                        ))}
+                      </div>
+                      <div
+                        className="d-flex justify-content-center mb-4"
+                        style={{ width: "100%" }}
+                      >
+                        <AddButton onClick={() => setShowTokenModal(true)} />
+                      </div>
+                    </>
                   )}
                 </div>
               </MuiPickersUtilsProvider>
@@ -1282,151 +1335,19 @@ const Deposit = ({ location, size }) => {
                       setDate={(date) => setEndDate(date)}
                     />
                   </div>
-                  {tokenArr.length > 0 && (
-                    <div className="col-12 px-0 px-md-2 mb-4 fontResize">
-                      <div className="d-flex justify-content-between ">
-                        <div
-                          style={{
-                            // width: "215px",
-                            overflowX: "auto",
-                          }}
-                        >
-                          <span className="text-center">
-                            <b>Reward Tokens</b>
-                          </span>
-                          {tokenArr.map((token) => (
-                            <p className="p-0 m-0" key={token.token_name}>
-                              {/* <span>{shortenAddress(token.token_address)}</span> */}
-                              <span>
-                                <img
-                                  src={UmaIcon}
-                                  alt="icon"
-                                  height="15"
-                                  style={{ marginRight: "5px" }}
-                                />
-                                {token.token_name}
-                              </span>
-                            </p>
-                          ))}
-                        </div>
-                        <div className="d-flex justify-content-between">
-                          <div>
-                            <span>
-                              <b>Min Reward Ratio</b>
-                            </span>
-                            {tokenArr.map((token) => (
-                              <p
-                                className="text-center p-0 m-0"
-                                key={token.token_name}
-                              >
-                                <span>{token.min_reward_ratio}</span>
-                              </p>
-                            ))}
-                          </div>
-                        </div>
-                        <div className="">
-                          <span>
-                            <b>&nbsp;</b>
-                          </span>
-                          {tokenArr.map((token) => (
-                            <p
-                              className="text-center p-0 m-0"
-                              key={token.token_name}
-                            >
-                              <DeleteIcon
-                                onClick={() =>
-                                  setTokenArr([
-                                    ...tokenArr.filter(
-                                      (t) => token.token_name !== t.token_name
-                                    ),
-                                  ])
-                                }
-                                color="secondary"
-                                className={classes.deleteBtn}
-                              />
-                            </p>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                  )}
-                  <div className="col-12 px-0 px-md-2 mb-4">
-                    <div className={classes.tokenAddressGroup}>
-                      <div className="row">
-                        <div className="col-10">
-                          <div className="row">
-                            <div className="col-12 mb-4">
-                              <InputText
-                                className="h-100"
-                                label="Token Address"
-                                value={tokenAddress}
-                                onChange={handleTokenAddressChange}
-                                fontSize={smallFont}
-                                marginSm
-                              />
-                            </div>
-                            <div
-                              className="col-6 text-center flex align-center"
-                              style={{ display: "flex", alignItems: "center" }}
-                            >
-                              {tokenResponse.length > 0 && (
-                                <p
-                                  style={{
-                                    color: "white",
-                                    fontSize: "13px",
-                                    fontWeight: "bold",
-                                    display: "flex",
-                                    justifyContent: "center",
-                                    alignItems: "center",
-                                    width: "100%",
-                                    marginTop: 0,
-                                  }}
-                                  className="fontResize"
-                                >
-                                  {!tokenResponse.startsWith("invalid") &&
-                                    !tokenResponse.startsWith("empty") && (
-                                      <img
-                                        src={UmaIcon}
-                                        alt="icon"
-                                        height="15"
-                                        style={{ marginRight: "5px" }}
-                                      />
-                                    )}
-                                  {tokenResponse}
-                                </p>
-                              )}
-                            </div>
-                            <div className="col-6">
-                              <InputText
-                                className="h-100"
-                                type="number"
-                                label="Min Ratio"
-                                value={minRewardRatio}
-                                // onChange={setMinRewardRatio}
-                                onChange={setMinRewardRatio}
-                                tooltip="The minimum reward ratio is the minimum reward per block to ensure the rewards deposited per block doesn't fall below this value / sufficient reward tokens are deposited. The value must be an integer with no decimals.
-                                Example: if the minimum reward ratio is 1, you can add 100 tokens for 100 blocks but you cannot add 99 tokens for 100 blocks because it will fall below 1."
-                                marginSm
-                              />
-                            </div>
-                          </div>
-                        </div>
-
-                        <div className="col-2 px-0 px-md-2  d-flex ">
-                          <AddButton onClick={() => addToken()} />
-                        </div>
-                        <div className="col-12">
-                          {addTokenError && (
-                            <>
-                              <p style={{ color: "tomato", fontSize: "10px" }}>
-                                {addTokenError}
-                              </p>
-                            </>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+                  <TokenSection
+                    tokenArr={tokenArr}
+                    setTokenArr={setTokenArr}
+                    tokenAddress={tokenAddress}
+                    handleTokenAddressChange={handleTokenAddressChange}
+                    tokenResponse={tokenResponse}
+                    minRewardRatio={minRewardRatio}
+                    setMinRewardRatio={setMinRewardRatio}
+                    addToken={addToken}
+                    addTokenError={addTokenError}
+                    smallFont={smallFont}
+                    classes={classes}
+                  />
 
                   {/* portal distribution limits */}
                   <div className="col-12 px-0 px-md-2">
@@ -1572,6 +1493,33 @@ const Deposit = ({ location, size }) => {
           setSearchValue,
           handleSearch2
         )}
+      </ThemeModal>
+
+      <ThemeModal
+        show={showTokenModal}
+        onClose={() => setShowTokenModal(false)}
+      >
+        <h2 style={{textAlign: 'center'}}>Add Token</h2>
+        <div style={{ padding: "1rem" }}>
+          <TokenSection
+            selectedTokenList={selectedTokenList}
+            selectedTokenListDefault={selectedTokenListDefault}
+            setSelectedTokenList={setSelectedTokenList}
+            tokenArr={tokenArrDeposit}
+            setTokenArr={setTokenArrDeposit}
+            tokenAddress={tokenAddress}
+            handleTokenAddressChange={handleTokenAddressChange}
+            tokenResponse={tokenResponse}
+            minRewardRatio={minRewardRatio}
+            setMinRewardRatio={setMinRewardRatio}
+            addToken={addTokenDeposit}
+            addTokenError={addTokenError}
+            smallFont={smallFont}
+            classes={classes}
+            quantity={quantity}
+            setQuantity={setQuantity}
+          />
+        </div>
       </ThemeModal>
 
       {loadingData.data === "transaction pending!" && (
