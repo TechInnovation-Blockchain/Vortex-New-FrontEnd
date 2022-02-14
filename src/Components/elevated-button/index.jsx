@@ -1,8 +1,10 @@
-import { Button } from "@material-ui/core";
-import ExpandLessIcon from "@material-ui/icons/ExpandLess";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import { Button } from '@material-ui/core'
+import ExpandLessIcon from '@material-ui/icons/ExpandLess'
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 
-const ElevatedBtn = ({ title, onClick, style, expanded }) => (
+const ElevatedBtn = ({
+  title, onClick, style, expanded,
+}) => (
   <div className="elevated-button" style={style}>
     <Button
       variant="contained"
@@ -27,10 +29,13 @@ const ElevatedBtn = ({ title, onClick, style, expanded }) => (
         />
       </svg>
       <span className="d-flex align-items-center gap-1 z-100 small">
-        <span className="px-2 elevated-title">{` ${title}`}</span>
+        <span className="px-2 elevated-title">
+          {' '}
+          {title}
+        </span>
         {expanded ? <ExpandMoreIcon /> : <ExpandLessIcon />}
       </span>
     </Button>
   </div>
-);
-export default ElevatedBtn;
+)
+export default ElevatedBtn

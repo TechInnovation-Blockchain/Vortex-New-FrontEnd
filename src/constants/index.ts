@@ -17,3 +17,10 @@ export const ETHERSCAN_ADDRESS_BASE_URL = VALID_CHAIN === 1
   : 'https://ropsten.etherscan.io/address/'
 
 export const INDEX_FEE = 0 / 100
+
+export enum TransactionStatus {
+  TRANSACTION_SUCCESS = 'transaction success!',
+  TRANSACTION_PENDING = 'transaction pending!',
+  TRANSACTION_FAILED = 'transaction failed!',
+  TRANSACTION_REJECTED = 'transaction rejected!',
+}

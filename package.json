@@ -32,6 +32,7 @@
     "@material-ui/lab": "4.0.0-alpha.57",
     "@material-ui/pickers": "^3.3.10",
     "@material-ui/styles": "^4.11.4",
+    "@types/react-router-dom": "^5.3.3",
     "@web3-react/core": "^6.1.9",
     "@web3-react/fortmatic-connector": "^6.1.6",
     "@web3-react/injected-connector": "^6.0.7",
@@ -84,7 +85,7 @@
     "reg-notify-github-plugin": "^0.11.1",
     "reg-publish-s3-plugin": "^0.11.0",
     "reg-suit": "^0.11.1",
-    "typescript": "^4.1.2",
+    "typescript": "^4.5.4",
     "webpack": "^5.65.0"
   },
   "browserslist": {
@@ -98,5 +99,28 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "loki": {
+    "configurations": {
+      "chrome.laptop": {
+        "target": "chrome.app",
+        "width": 1366,
+        "height": 768,
+        "deviceScaleFactor": 1,
+        "mobile": false,
+        "fitWindow": false
+      },
+      "chrome.iphone7": {
+        "target": "chrome.app",
+        "preset": "iPhone 7"
+      },
+      "chrome.ipad": {
+        "target": "chrome.app",
+        "width": 960,
+        "height": 640,
+        "deviceScaleFactor": 1,
+        "mobile": true
+      }
+    }
   }
 }

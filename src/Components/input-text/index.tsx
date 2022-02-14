@@ -1,33 +1,28 @@
-import { makeStyles } from '@material-ui/core/styles'
+import React from 'react'
 import TextField from '@material-ui/core/TextField'
+import { InputProps as StandardInputProps } from '@material-ui/core'
 import Tooltip from '@material-ui/core/Tooltip'
 import InfoIcon from '@material-ui/icons/Info'
+import inputStyles from './styles'
 
-const inputStyles = ({ label, font }) => makeStyles(() => ({
-  selectRoot: {
-    fontSize: '20px',
-    padding: '7px 15px',
-  },
-  inputProps: {
-    fontWeight: 'bold',
-    marginLeft: '0',
-    marginTop: label ? '18px' : '5px',
-    color: '#65C988',
-    fontSize: font || '',
-    height: '35px',
-  },
-  inputLabel: {
-    fontSize: '16px',
-    width: '125%',
-  },
-  sideLabel: {
-    fontSize: '10px',
-    fontWeight: 'bold',
-  },
-}))()
+export interface Props {
+  fontSize?: Number,
+  className: string,
+  Sublabel?: typeof React.Component,
+  label: string,
+  tooltip?: string,
+  marginSm: boolean,
+  value: string,
+  onChange: (value: string) => void,
+  type: string,
+  placeholder: string,
+  sideLabel?: string,
+  error?: string,
+  inputProps: StandardInputProps['inputProps'],
+}
 
-const InputText = ({
-  fontSize, className, Sublabel, label, tooltip, marginSm, value, onChange, type, placeholder, sideLabel,
+const InputText: React.FC<Props> = ({
+  fontSize, className, Sublabel, label, tooltip, marginSm, value, onChange, type, placeholder, sideLabel, error, inputProps = {},
 }) => {
   const classes = inputStyles({ label, font: fontSize })
   const id = Math.random().toString(36).substring(2) + new Date().getTime().toString(36)
@@ -39,10 +34,8 @@ const InputText = ({
             `${classes.selectRoot
             } d-flex justify-content-between align-items-end paddingResize`
           }
-          // style={styleParent}
           style={{ padding: marginSm ? '0px 15px' : '7px 15px' }}
         >
-          {/* {label && <ThemeLabel label={label}/>} */}
           <TextField
             id={id}
             label={(
@@ -69,8 +62,11 @@ const InputText = ({
             onChange={(e) => onChange && onChange(e.target.value)}
             inputProps={{
               className: `inputText ${classes.inputProps}`,
+              ...inputProps,
             }}
             className={marginSm ? 'margin-sm' : ''}
+            error={!!error}
+            helperText={error}
           />
           <span className={classes.sideLabel}>{sideLabel}</span>
         </div>
@@ -87,4 +83,5 @@ const InputText = ({
     </>
   )
 }
+
 export default InputText

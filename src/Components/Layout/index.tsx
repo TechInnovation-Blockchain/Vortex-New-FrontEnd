@@ -3,7 +3,7 @@ import LayoutFooter from './layout-footer'
 import LayoutHeader from './layout-header'
 import './layout.css'
 
-const Layout = ({ children }) => (
+const Layout: React.FC<{}> = ({ children }) => (
   <>
     <div className="main">
       <div className="bglayer" />

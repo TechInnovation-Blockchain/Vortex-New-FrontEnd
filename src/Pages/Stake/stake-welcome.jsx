@@ -1,24 +1,24 @@
-import { Button, makeStyles } from "@material-ui/core";
-import Accordion from "@material-ui/core/Accordion";
-import AccordionSummary from "@material-ui/core/AccordionSummary";
-import Typography from "@material-ui/core/Typography";
-import React from "react";
-import AquaIcon from "../../assets/images/icons/aqua.webp";
-import FlashIcon from "../../assets/images/icons/FLASH.webp";
-import UmaIcon from "../../assets/images/icons/UMA.webp";
+import { Button, makeStyles } from '@material-ui/core'
+import Accordion from '@material-ui/core/Accordion'
+import AccordionSummary from '@material-ui/core/AccordionSummary'
+import Typography from '@material-ui/core/Typography'
+import React from 'react'
+import AquaIcon from '../../assets/images/icons/aqua.webp'
+import FlashIcon from '../../assets/images/icons/FLASH.webp'
+import UmaIcon from '../../assets/images/icons/UMA.webp'
 // import './stake=welcome.css';
 const useStyles = makeStyles((theme) => ({
   welcomeRoot: {
-    "& .MuiAccordionSummary-root": {
-      pointerEvents: "none",
+    '& .MuiAccordionSummary-root': {
+      pointerEvents: 'none',
     },
   },
   heading: {
     // fontSize: theme.typography.pxToRem(24),
     fontSize: theme.typography.pxToRem(18),
-    fontWeight: "bold",
+    fontWeight: 'bold',
 
-    [theme.breakpoints.down("sm")]: {
+    [theme.breakpoints.down('sm')]: {
       fontSize: theme.typography.pxToRem(16),
     },
   },
@@ -26,34 +26,39 @@ const useStyles = makeStyles((theme) => ({
     fontSize: theme.typography.pxToRem(20),
     paddingRight: theme.typography.pxToRem(60),
   },
-}));
+}))
 const StakeWelcome = ({ onHide }) => {
-  const [expanded, setExpanded] = React.useState(false);
+  const [expanded, setExpanded] = React.useState(false)
   const handleChange = (panel) => (event, isExpanded) => {
-    event.stopPropagation();
-    setExpanded(isExpanded ? panel : false);
-  };
+    event.stopPropagation()
+    setExpanded(isExpanded ? panel : false)
+  }
 
-  const classes = useStyles();
+  const classes = useStyles()
 
   return (
     <div className={classes.welcomeRoot}>
       <Typography className={classes.root}>
         <p className="text-center text">
           Welcome to the
-          <b>{" Blockzero Vortex"}</b>:
+          {' '}
+          <b>Blockzero Vortex</b>
+          :
         </p>
         <p className="text text-center">
-          {"If you "}
-          <b>stake XIO</b>, below are some tokens you will earn simultaneously
-          in
-          <b>{" real time."}</b>
+          If you
+          {' '}
+          <b>stake XIO</b>
+          , below are some tokens you will earn
+          simultaneously in
+          {' '}
+          <b>real time.</b>
         </p>
       </Typography>
       <Accordion
-        expanded={expanded === "panel2"}
+        expanded={expanded === 'panel2'}
         className="yield-accordion-outer"
-        onChange={handleChange("panel2")}
+        onChange={handleChange('panel2')}
       >
         <AccordionSummary aria-controls="panel2bh-content" id="panel2bh-header">
           <Typography
@@ -68,9 +73,9 @@ const StakeWelcome = ({ onHide }) => {
         </AccordionSummary>
       </Accordion>
       <Accordion
-        expanded={expanded === "panel1"}
+        expanded={expanded === 'panel1'}
         className="yield-accordion-outer"
-        onChange={handleChange("panel1")}
+        onChange={handleChange('panel1')}
       >
         <AccordionSummary aria-controls="panel1bh-content" id="panel1bh-header">
           <Typography
@@ -86,9 +91,9 @@ const StakeWelcome = ({ onHide }) => {
       </Accordion>
 
       <Accordion
-        expanded={expanded === "panel3"}
+        expanded={expanded === 'panel3'}
         className="yield-accordion-outer"
-        onChange={handleChange("panel3")}
+        onChange={handleChange('panel3')}
       >
         <AccordionSummary aria-controls="panel2bh-content" id="panel2bh-header">
           <Typography
@@ -109,12 +114,12 @@ const StakeWelcome = ({ onHide }) => {
         disableElevation
         fullWidth
         className="main-btn primaryBtn"
-        style={{ marginBottom: "1.5rem" }}
+        style={{ marginBottom: '1.5rem' }}
         onClick={onHide}
       >
         START
       </Button>
     </div>
-  );
-};
-export default StakeWelcome;
+  )
+}
+export default StakeWelcome

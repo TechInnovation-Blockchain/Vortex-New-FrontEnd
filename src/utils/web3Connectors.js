@@ -10,7 +10,7 @@ import injectedLogo from '../assets/wallets/injected.png'
 import metamaskLogo from '../assets/wallets/metamask.png'
 import portisLogo from '../assets/wallets/portis.png'
 import walletconnectLogo from '../assets/wallets/walletconnect.png'
-import { VALID_CHAIN } from '../config/constants'
+import { VALID_CHAIN } from '../constants'
 
 const REACT_APP_NETWORK_URL1 = `https://mainnet.infura.io/v3/${process.env.REACT_APP_INFURA_KEY}`
 const REACT_APP_NETWORK_URL4 = `https://rinkeby.infura.io/v3/${process.env.REACT_APP_INFURA_KEY}`

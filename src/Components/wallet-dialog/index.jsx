@@ -9,13 +9,13 @@ import {
   TextField,
   Tooltip,
   Typography,
-} from "@material-ui/core";
-import { ClearOutlined, LinkOffOutlined } from "@material-ui/icons";
-import { useWeb3React } from "@web3-react/core";
-import { WalletConnectConnector } from "@web3-react/walletconnect-connector";
-import { useCallback, useState } from "react";
-import { useLoading, useWeb3 } from "../../hooks";
-import { useStyles } from "./styles";
+} from '@material-ui/core'
+import { ClearOutlined, LinkOffOutlined } from '@material-ui/icons'
+import { useWeb3React } from '@web3-react/core'
+import { WalletConnectConnector } from '@web3-react/walletconnect-connector'
+import { useCallback, useState } from 'react'
+import { useLoading, useWeb3 } from '../../hooks'
+import { useStyles } from './styles'
 
 const WalletDialog = ({
   open,
@@ -24,31 +24,28 @@ const WalletDialog = ({
   items = [],
   activate = () => {},
 }) => {
-  const classes = useStyles();
-  const [search, setSearch] = useState("");
-  const { loading } = useLoading();
-  const { web3context } = useWeb3();
-  const { deactivate } = useWeb3React();
+  const classes = useStyles()
+  const [search, setSearch] = useState('')
+  const { loading } = useLoading()
+  const { web3context } = useWeb3()
+  const { deactivate } = useWeb3React()
 
   const onChangeSearch = ({ target: { value } }) => {
-    setSearch(value.toUpperCase());
-  };
+    setSearch(value.toUpperCase())
+  }
 
-  const filteredData = useCallback(
-    () => items.filter(({ name }) => name.toUpperCase().includes(search)),
-    [search, items]
-  );
+  const filteredData = useCallback(() => items.filter(({ name }) => name.toUpperCase().includes(search)), [search, items])
 
   const onClose = useCallback(() => {
-    setOpen(false);
-  }, [setOpen]);
+    setOpen(false)
+  }, [setOpen])
 
   const handleDisconnect = (connector) => {
-    deactivate();
-    localStorage.removeItem("jwt");
-    connector instanceof WalletConnectConnector &&
-      localStorage.removeItem("walletconnect");
-  };
+    deactivate()
+    localStorage.removeItem('jwt')
+    connector instanceof WalletConnectConnector // eslint-disable-line @typescript-eslint/no-unused-expressions
+      && localStorage.removeItem('walletconnect')
+  }
 
   return (
     <MuiDialog
@@ -60,12 +57,14 @@ const WalletDialog = ({
         <Box className={classes.closeBtnContainer}>
           <Typography variant="body1" className={classes.dialogHeading}>
             {web3context && web3context.active
-              ? "CHANGE WALLET"
-              : "CONNECT TO A WALLET"}
+              ? 'CHANGE WALLET'
+              : 'CONNECT TO A WALLET'}
 
             <br />
             {web3context && web3context.active ? (
-              <span className={classes.secondaryHeading}>
+              <span
+                className={classes.secondaryHeading}
+              >
                 {`CONNECTED TO ${address}`}
               </span>
             ) : null}
@@ -91,7 +90,7 @@ const WalletDialog = ({
           {search ? (
             <IconButton
               size="small"
-              onClick={() => setSearch("")}
+              onClick={() => setSearch('')}
               className={classes.clearSearch}
             >
               <ClearOutlined />
@@ -101,12 +100,14 @@ const WalletDialog = ({
 
         {filteredData().length ? (
           <List className={classes.list}>
-            {filteredData().map(({ name, connector, connectorType, logo }) => (
+            {filteredData().map(({
+              name, connector, connectorType, logo,
+            }) => (
               <ListItem
                 button
                 key={name}
                 onClick={() => {
-                  activate(connector, onClose);
+                  activate(connector, onClose)
                 }}
                 className={
                   !(web3context?.connector instanceof connectorType)
@@ -115,14 +116,14 @@ const WalletDialog = ({
                 }
               >
                 <Typography variant="body1" className={classes.listItemText}>
-                  {loading.walletConnection &&
-                  loading.connector === connector ? (
+                  {loading.walletConnection
+                  && loading.connector === connector ? (
                     <CircularProgress
                       size={12}
                       color="inherit"
                       className={classes.loadingIcon}
                     />
-                  ) : null}
+                    ) : null}
                   <img
                     src={logo}
                     alt={name}
@@ -150,7 +151,7 @@ const WalletDialog = ({
         )}
       </Container>
     </MuiDialog>
-  );
-};
+  )
+}
 
-export default WalletDialog;
+export default WalletDialog

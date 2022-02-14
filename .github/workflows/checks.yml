@@ -1,17 +1,52 @@
 name: Checks
 on: [push]
-
+env:
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 jobs:
-  checks:
+  lint:
     runs-on: ubuntu-20.04
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+
       - uses: actions/setup-node@v2
         with:
         # The Node.js version to configure
           node-version: 14
+          cache: 'yarn'
+
       - name: Install
         run: yarn
+
       - name: Lint
         run: yarn lint
+
+  storybook:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v2
+        with:
+        # The Node.js version to configure
+          node-version: 14
+          cache: 'yarn'
+
+      - name: Install
+        run: yarn
+
+      - name: Build static storybooks
+        run: yarn build-storybook
+
+      - name: Snapshot
+        run: yarn loki:update
+
+      - name: Reg-suit
+        run: yarn regression
+        env:
+          AWS_ACCESS_KEY_ID: ${{ env.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ env.AWS_SECRET_ACCESS_KEY }}

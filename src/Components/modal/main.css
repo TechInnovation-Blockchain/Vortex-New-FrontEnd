@@ -1,0 +1,23 @@
+div {
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE 10+ */
+  }
+
+  /* Works on Chrome, Edge, and Safari */
+  ::-webkit-scrollbar {
+    display: none;
+  }
+  
+  ::-webkit-scrollbar-track-piece {
+    background: #bdbdbd;
+    border-radius: 10px;
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    background: #bdbdbd;
+  }
+
+
+  /* div {
+    scrollbar-visibility: hidden; /* <--- I wish we had this one !!
+  } */

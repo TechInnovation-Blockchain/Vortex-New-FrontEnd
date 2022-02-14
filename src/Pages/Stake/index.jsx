@@ -1,4 +1,5 @@
-import { Button, CircularProgress } from '@material-ui/core'
+import { useLocation } from 'react-router-dom'
+import { Button } from '@material-ui/core'
 import Accordion from '@material-ui/core/Accordion'
 import AccordionDetails from '@material-ui/core/AccordionDetails'
 import AccordionSummary from '@material-ui/core/AccordionSummary'
@@ -7,29 +8,27 @@ import { faCheck } from '@fortawesome/free-solid-svg-icons'
 import { formatUnits } from '@ethersproject/units'
 import Typography from '@material-ui/core/Typography'
 import { useWeb3React } from '@web3-react/core'
-import NavigateNextIcon from '@material-ui/icons/NavigateNext'
-import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore'
 // import { BigNumber } from "ethers";
 import BigNumber from 'bignumber.js'
 import { useEffect, useState, useCallback } from 'react'
 import { useSelector } from 'react-redux'
-import { vortexData } from '../../apollo/client'
-import { ALL_USER_PORTALS, TOTAL_COUNT } from '../../apollo/queries'
-import Logo from '../../assets/images/center-logo.png'
-import AquaIcon from '../../assets/images/icons/aqua.webp'
-import UmaIcon from '../../assets/images/icons/UMA.webp'
+import { vortexData } from 'apollo/client'
+import { ALL_USER_PORTALS, TOTAL_COUNT } from 'apollo/queries'
+import Logo from 'assets/images/center-logo.png'
+import AquaIcon from 'assets/images/icons/aqua.webp'
+import UmaIcon from 'assets/images/icons/UMA.webp'
 import {
-  DepositConfirm, ElevatedBtn, GlassCard, PopupDropdown, InputText,
-} from '../../Components'
-import inputStyles from '../../Components/inputStyles'
-import ThemeModal from '../../Components/theme-modal'
-import { StyledTab, StyledTabs, ThemeTabs } from '../../Components/theme-tabs'
+  DepositConfirm, ElevatedBtn, GlassCard, InputText,
+} from 'components'
+import inputStyles from 'components/styles'
+import Modal from 'components/modal'
+import { StyledTab, StyledTabs, ThemeTabs } from 'components/theme-tabs'
 import {
   approve,
   getBalance,
   getDecimal,
   getName,
-} from '../../contracts/functions/erc20Functions'
+} from 'contracts/functions/erc20Functions'
 import {
   getRewardTokens,
   stake,
@@ -37,17 +36,32 @@ import {
   claimdata,
   getRewardRate,
   getTotalReward,
-} from '../../contracts/functions/portalFunctions'
-import StakeDashboard from '../StakeDashboard'
-
-import YieldHistory from '../YieldHistory'
+} from 'contracts/functions/portalFunctions'
+import { store } from 'redux/store'
+import { TransactionStatus } from 'constants'
+import { dataLoading } from 'redux/actions/loadingActions'
+import ThemeResponse from 'components/modal/theme-response'
+import StakeDashboard from './stake-dashboard'
+import YieldHistory from './yield-history'
 import StakeWelcome from './stake-welcome'
+import ModalContent from './modal-content'
 
-import { store } from '../../redux/store'
-import { dataLoading } from '../../redux/actions/loadingActions'
-import ThemeResponse from '../../Components/theme-response'
+const STAKING_MODAL_TITLES = {
+  [TransactionStatus.TRANSACTION_PENDING]: 'STAKE PENDING',
+  [TransactionStatus.TRANSACTION_SUCCESS]: 'STAKE SUCCESS',
+  [TransactionStatus.TRANSACTION_FAILED]: 'STAKE FAILED',
+  [TransactionStatus.TRANSACTION_REJECTED]: 'STAKE REJECTED',
+}
 
-const Stake = ({ location, size }) => {
+const CLAIM_MODAL_TITLE = {
+  [TransactionStatus.TRANSACTION_PENDING]: 'PORTAL CLAIM PENDING',
+  [TransactionStatus.TRANSACTION_SUCCESS]: 'PORTAL CLAIM SUCCESS',
+  [TransactionStatus.TRANSACTION_FAILED]: 'PORTAL CLAIM FAILED',
+  [TransactionStatus.TRANSACTION_REJECTED]: 'PORTAL CLAIM REJECTED',
+}
+
+const Stake = ({ size }) => {
+  const location = useLocation()
   const staking = useSelector((state) => state.staking_loading)
   const claiming = useSelector((state) => state.claiming_loading)
 
@@ -69,7 +83,7 @@ const Stake = ({ location, size }) => {
     setExpanded(isExpanded ? panel : false)
   }
   const [value, setValue] = useState(tabNo)
-  const [modal, setModal] = useState({ show: false, onClose })
+  const [modal, setModal] = useState({ show: false, onClose }) // eslint-disable-line @typescript-eslint/no-use-before-define
   const [selectedPortalStake, setSelectedPortalStake] = useState()
   const [selectTokenOptionsStake, setSelectTokenOptionsStake] = useState()
   const [quantityStake, setQuantityStake] = useState()
@@ -78,10 +92,10 @@ const Stake = ({ location, size }) => {
   const [filteredPortals, setFilteredPortals] = useState()
   const [selectedPortalOptionStake, setSelectedPortalOptionStake] = useState('')
   const [selectedPortalOptionClaim, setSelectedPortalOptionClaim] = useState('')
-  const [tokenContractAddressStake, setTokenContractAddressStake] = useState()
+  const [tokenContractAddressStake, setTokenContractAddressStake] = useState() // eslint-disable-line @typescript-eslint/no-unused-vars
 
-  const [selectTokenOptionsClaim, setSelectTokenOptionsClaim] = useState()
-  const [tokenContractAddressClaim, setTokenContractAddressClaim] = useState()
+  const [selectTokenOptionsClaim, setSelectTokenOptionsClaim] = useState() // eslint-disable-line @typescript-eslint/no-unused-vars
+  const [tokenContractAddressClaim, setTokenContractAddressClaim] = useState() // eslint-disable-line @typescript-eslint/no-unused-vars
   const [selectedPortalClaim, setSelectedPortalClaim] = useState()
   const [claimData, setClaimData] = useState()
   const [searchValue, setSearchValue] = useState('')
@@ -115,7 +129,7 @@ const Stake = ({ location, size }) => {
     claimEffect()
   }, [selectedPortalClaim, portals, account])
 
-  const [_, setTotalCount] = useState('X')
+  const [_, setTotalCount] = useState('X') // eslint-disable-line @typescript-eslint/naming-convention, @typescript-eslint/no-unused-vars
 
   const paginationArr = (arr) => arr?.reduce((resultArray, item, index) => {
     const result = resultArray
@@ -258,14 +272,18 @@ const Stake = ({ location, size }) => {
             <div>
               <p>
                 Your stake of
+                {' '}
                 <b>
-                  {` ${quantityStake} ${selectTokenOptionsStake} `}
+                  {`${quantityStake} ${selectTokenOptionsStake}`}
                 </b>
+                {' '}
                 will start after successful confirmation.
               </p>
               <p>
                 You may need to approve a one-off transaction to allow your
-                <b>{` ${selectTokenOptionsStake} `}</b>
+                {' '}
+                <b>{selectTokenOptionsStake}</b>
+                {' '}
                 to be used.
               </p>
             </div>
@@ -353,13 +371,16 @@ const Stake = ({ location, size }) => {
         <div style={{ textAlign: 'left' }}>
           <p>
             You are claiming your rewards from
-            <b>{` ${selectedPortalOptionClaim} `}</b>
+            {' '}
+            <b>{selectedPortalOptionClaim}</b>
+            {' '}
             as follows:
           </p>
           <div>
             <p>
               <FontAwesomeIcon icon={faCheck} />
-              {' Reward Tokens :'}
+              {' '}
+              Reward Tokens :
               {portals
                 .filter(
                   (item) => item.label === selectedPortalOptionClaim,
@@ -369,7 +390,8 @@ const Stake = ({ location, size }) => {
             </p>
             <p>
               <FontAwesomeIcon icon={faCheck} />
-              {' Amount :'}
+              {' '}
+              Amount :
               {claimData.length === 0
                 ? portals
                   .filter(
@@ -386,13 +408,16 @@ const Stake = ({ location, size }) => {
         <div style={{ textAlign: 'left' }}>
           <p>
             You are claiming your rewards from
-            <b>{` ${selectedPortalOptionClaim} `}</b>
+            {' '}
+            <b>{selectedPortalOptionClaim}</b>
+            {' '}
             as follows:
           </p>
           <div>
             <p>
               <FontAwesomeIcon icon={faCheck} />
-              {' Reward Tokens :'}
+              {' '}
+              Reward Tokens :
               {portals
                 .filter(
                   (item) => item.label === selectedPortalOptionClaim,
@@ -402,7 +427,8 @@ const Stake = ({ location, size }) => {
             </p>
             <p>
               <FontAwesomeIcon icon={faCheck} />
-              {' Amount :'}
+              {' '}
+              Amount :
               {claimData.length === 0
                 ? portals
                   .filter(
@@ -454,161 +480,6 @@ const Stake = ({ location, size }) => {
     }
     setSearchValue(text)
   }
-
-  const contentNew = useCallback(
-    (
-      selectItemsData,
-      select,
-      setModal,
-      title,
-      isToken = false,
-      setSelectTokenOptions,
-      setTokenContractAddress,
-      setSelectedPortal,
-      setInputValue,
-      handleSearch,
-    ) => (
-      <div className="content p-4" style={{ maxWidth: '600px' }}>
-        <main>
-          <h3 style={{ padding: '0 25px' }}>
-            {title || 'Select a token'}
-          </h3>
-
-          <div className="modal__search-section">
-            <input
-              type="text"
-              placeholder="Search Portal/Token"
-              className="modal__search-box"
-              style={{
-                fontSize: searchSmallFont.length > 0 ? searchSmallFont : '',
-              }}
-              onChange={(e) => {
-                if (setInputValue) {
-                  setInputValue(e.target.value)
-                }
-              }}
-            />
-            {/* <textarea className="modal__search-box"
-            rows="1"
-            placeholder="Search Portal/Token"
-            style={{fontSize: searchSmallFont.length > 0 ? searchSmallFont : ''}}
-            onChange={(e) => {
-              if (setInputValue) {
-                setInputValue(e.target.value);
-              }
-            }}
-          ></textarea> */}
-            <button
-              className="modal__search-btn"
-              onClick={handleSearch}
-              type="button"
-            >
-              Search
-            </button>
-          </div>
-
-          {/* <section style={{ padding: "0 25px" }}> */}
-          <section style={{}}>
-            <div
-              style={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                marginTop: '2rem',
-                padding: '0 16px',
-              }}
-            >
-              <p>Token Name</p>
-              <p>{isToken ? 'Address' : 'APY'}</p>
-            </div>
-
-            <div style={{ overflowY: 'auto', height: '20rem' }}>
-              {/* eslint-disable-next-line no-nested-ternary */}
-              {selectItemsData ? (
-                selectItemsData.length === 0 ? (
-                  <div
-                    style={{
-                      justifyContent: 'space-between',
-                      alignItems: 'center',
-                      color: '#bdbdbd',
-                      textAlign: 'center',
-                    }}
-                  >
-                    No Data
-                  </div>
-                ) : (
-                  selectItemsData[0].map((item, index) => (
-                    <div
-                      key={index} // eslint-disable-line react/no-array-index-key
-                      style={{
-                        display: 'flex',
-                        justifyContent: 'space-between',
-                        alignItems: 'center',
-                        color: '#bdbdbd',
-                      }}
-                    >
-                      <PopupDropdown
-                        data={item}
-                        select={select}
-                        setSelectedTokenOption={setSelectTokenOptions}
-                        setModal={setModal}
-                        setTokenContractAddresses={setTokenContractAddress}
-                        setRequestedTokenOptions={() => { }}
-                        setSelectedPortal={setSelectedPortal}
-                      />
-                    </div>
-                  ))
-                )
-              ) : (
-                <CircularProgress
-                  style={{ color: 'gray', display: 'flex', margin: 'auto' }}
-                />
-              )}
-            </div>
-
-            {/* <ThemeSelect options={portalOptions} onChange={null} /> */}
-          </section>
-
-          <div className="yield-pagination text-center mt-2 d-flex align-items-center justify-content-center">
-            {/* <span className="page-number">1 of 6</span> */}
-            <span className="page-number">
-              {`${pagination.currentPage} of ${pagination.pageSize}`}
-            </span>
-            <span className="pagination-control ml-4 d-flex align-self-center">
-              <NavigateBeforeIcon
-                className={
-                  pagination.currentPage === 1 ? 'nav-control' : 'nav-control'
-                }
-                onClick={() => {
-                  if (pagination.currentPage > 1) {
-                    setPagination({
-                      ...pagination,
-                      currentPage: pagination.currentPage - 1,
-                    })
-                  }
-                }}
-              />
-              <NavigateNextIcon
-                className={
-                  pagination.currentPage === pagination.pageSize
-                    ? 'nav-control ml-3'
-                    : 'nav-control ml-3'
-                }
-                onClick={() => {
-                  if (pagination.currentPage < pagination.pageSize) {
-                    setPagination({
-                      ...pagination,
-                      currentPage: pagination.currentPage + 1,
-                    })
-                  }
-                }}
-              />
-            </span>
-          </div>
-        </main>
-      </div>
-    ),
-    [pagination, setFilteredPortals, searchValue, searchSmallFont],
-  )
 
   const handleSearch = () => {
     const filteredData = portals?.filter((item) => (
@@ -744,7 +615,7 @@ const Stake = ({ location, size }) => {
                               <span
                                 role="button"
                                 tabIndex={0}
-                                onKeyPress={() => {}}
+                                onKeyPress={() => { }}
                                 className="text-light text-right pointer quantity-limit"
                                 onClick={() => {
                                   setQuantityStake(
@@ -752,12 +623,13 @@ const Stake = ({ location, size }) => {
                                   )
                                 }}
                               >
-                                {'25% '}
+                                25%
+                                {' '}
                               </span>
                               <span
                                 role="button"
                                 tabIndex={-1}
-                                onKeyPress={() => {}}
+                                onKeyPress={() => { }}
                                 className="text-light ml-2 text-right pointer quantity-limit"
                                 onClick={() => {
                                   setQuantityStake(
@@ -765,12 +637,13 @@ const Stake = ({ location, size }) => {
                                   )
                                 }}
                               >
-                                {'50% '}
+                                50%
+                                {' '}
                               </span>
                               <span
                                 role="button"
                                 tabIndex={-2}
-                                onKeyPress={() => {}}
+                                onKeyPress={() => { }}
                                 className="primaryText quantity-primary ml-2 text-right pointer quantity-limit"
                                 onClick={() => {
                                   setQuantityStake(
@@ -778,7 +651,8 @@ const Stake = ({ location, size }) => {
                                   )
                                 }}
                               >
-                                {'MAX '}
+                                MAX
+                                {' '}
                               </span>
                             </span>
                           )}
@@ -933,85 +807,39 @@ const Stake = ({ location, size }) => {
             </Accordion>
           </>
         )}
-        {/* eslint-disable-next-line react/jsx-props-no-spreading */}
-        <ThemeModal {...modal} />
+        <Modal show={modal.show} onClose={modal.onClose}>
+          {modal.Content && modal.Content()}
+        </Modal>
       </GlassCard>
 
-      <ThemeModal
-        show={showPortalModalStake}
+      <Modal
+        show={showPortalModalStake || showPortalModalClaim}
         onClose={() => {
           setShowPortalModalStake(false)
           setSearchValue('')
+          setFilteredPortals(paginationArr(portals))
         }}
       >
-        {contentNew(
-          // portals,
-          filteredPortals,
-          setSelectedPortalOptionStake,
-          setShowPortalModalStake,
-          'Select a portal',
-          false,
-          setSelectTokenOptionsStake,
-          setTokenContractAddressStake,
-          setSelectedPortalStake,
-          // searchValue,
-          // setSearchValue,
-          handleInputChange,
-          handleSearch,
-        )}
-      </ThemeModal>
+        <ModalContent
+          selectItemsData={filteredPortals}
+          select={showPortalModalStake ? setSelectedPortalOptionStake : setSelectedPortalOptionClaim}
+          setModal={setSelectedPortalOptionClaim ? setShowPortalModalStake : setShowPortalModalClaim}
+          setSelectTokenOptions={setSelectedPortalOptionClaim ? setSelectTokenOptionsStake : setSelectTokenOptionsClaim}
+          setTokenContractAddress={setSelectedPortalOptionClaim ? setTokenContractAddressStake : setTokenContractAddressClaim}
+          setSelectedPortal={setSelectedPortalOptionClaim ? setSelectedPortalStake : setSelectedPortalClaim}
+          setInputValue={handleInputChange}
+          handleSearch={handleSearch}
+          pagination={pagination}
+          searchSmallFont={searchSmallFont}
+          setPagination={setPagination}
+        />
+      </Modal>
 
-      <ThemeModal
-        show={showPortalModalClaim}
-        onClose={() => {
-          setShowPortalModalClaim(false)
-          setSearchValue('')
-        }}
-      >
-        {contentNew(
-          // portals,
-          filteredPortals,
-          setSelectedPortalOptionClaim,
-          setShowPortalModalClaim,
-          'Select a portal',
-          false,
-          setSelectTokenOptionsClaim,
-          setTokenContractAddressClaim,
-          setSelectedPortalClaim,
-          // searchValue,
-          // setSearchValue,
-          handleInputChange,
-          handleSearch,
-        )}
-      </ThemeModal>
-
-      {staking.data === 'transaction pending!' && (
-        <ThemeResponse title="STAKE PENDING" type="pending" />
+      {staking.data && (
+        <ThemeResponse title={STAKING_MODAL_TITLES[staking.data]} type={staking.data} />
       )}
-
-      {staking.data === 'transaction success!' && (
-        <ThemeResponse title="STAKE SUCCESS" type="success" />
-      )}
-
-      {staking.data === 'transaction failed!' && (
-        <ThemeResponse title="STAKE FAILED" type="failed" />
-      )}
-
-      {staking.data === 'transaction rejected!' && (
-        <ThemeResponse title="STAKE REJECTED" type="rejected" />
-      )}
-
-      {claiming.data === 'transaction pending!' && (
-        <ThemeResponse title="PORTAL CLAIM PENDING" type="pending" />
-      )}
-      {claiming.data === 'transaction success!' && (
-        <ThemeResponse title="PORTAL CLAIM SUCCESS" type="success" />
-      )}
-      {claiming.data === 'transaction failed!' && (
-        <ThemeResponse title="PORTAL CLAIM FAILED" type="failed" />
-      )}
-      {claiming.data === 'transaction rejected!' && (
-        <ThemeResponse title="PORTAL CLAIM REJECTED" type="rejected" />
+      {claiming.data && (
+        <ThemeResponse title={CLAIM_MODAL_TITLE[claiming.data]} type={staking.data} />
       )}
     </>
   )

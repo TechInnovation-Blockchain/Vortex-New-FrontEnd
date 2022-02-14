@@ -1,0 +1,22 @@
+{
+    "core": {
+      "workingDir": ".reg",
+      "actualDir": ".loki/reference",
+      "thresholdRate": 0.5,
+      "addIgnore": true,
+      "ximgdiff": {
+        "invocationType": "client"
+      }
+    },
+    "plugins": {
+      "reg-keygen-git-hash-plugin": true,
+      "reg-notify-github-plugin": {
+        "prComment": true,
+        "prCommentBehavior": "default",
+        "clientId": "M7a0NDM0NzE21Q/LLypJrdB1K8rPK0nNS9E3MjQ3N7c0NtB3yslPzq5KLcr3SUwqBgA="
+      },
+      "reg-publish-s3-plugin": {
+        "bucketName": "vortex-frontend-regression-testing"
+      }
+    }
+  }

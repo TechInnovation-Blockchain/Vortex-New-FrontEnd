@@ -1,28 +1,16 @@
 import { ThemeProvider } from '@material-ui/core/styles'
 import { useWeb3React, Web3ReactProvider } from '@web3-react/core'
 import { useEffect } from 'react'
-import { BrowserRouter as Router, Switch } from 'react-router-dom'
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
 import './App.css'
 import './assets/css/grid.css'
-import AuthMiddleware from './Auth/AuthMiddleware'
-import Layout from './Components/Layout'
-import { Snackbar } from './Components'
-// import {useJWT, useModal, useTheme} from './hooks';
+import Deposit from 'pages/deposit'
+import StakePage from 'pages/stake'
+import Layout from './components/layout'
+import { Snackbar } from './components'
 import { useJWT, useTheme } from './hooks'
-import routes from './Routing'
 import { darkTheme, lightTheme } from './theme/materialUiTheme'
 import { getLibrary } from './utils/web3ConnectFunctions'
-
-// const theme = createTheme({
-//   typography: {
-//     fontFamily: 'Montserrat',
-//     fontSize: '13px'
-//   },
-//   palette: {
-//     primary: green,
-//     type: "dark" // Switching the dark mode on is a single property value change.
-//   }
-// });
 
 function App() {
   const { theme } = useTheme()
@@ -36,16 +24,8 @@ function App() {
     )
   }, [theme])
 
-  // const { modalProps } = useModal();
   const { unauthorized, getJWTF, authorizeF } = useJWT()
   const { account, deactivate } = useWeb3React()
-
-  // const [open, setOpen] = useState(localStorage.getItem('initail') ? false : true);
-
-  // const handleClose = () => {
-  //   setOpen(false);
-  //   localStorage.setItem('initail', true);
-  // };
 
   useEffect(() => {
     if (account) {
@@ -64,17 +44,16 @@ function App() {
     <Web3ReactProvider getLibrary={getLibrary}>
       <ThemeProvider theme={theme === 'dark' ? darkTheme : lightTheme}>
         <Router>
-          <Switch>
-            {routes.map((route, key) => (
-              <AuthMiddleware
-                path={route.path}
-                layout={Layout}
-                redirectTo={route.redirectTo}
-                component={route.component}
-                key={key} // eslint-disable-line react/no-array-index-key
-              />
-            ))}
-          </Switch>
+          <Layout>
+            <Switch>
+              <Route exact path="/">
+                <StakePage />
+              </Route>
+              <Route exact path="/create">
+                <Deposit />
+              </Route>
+            </Switch>
+          </Layout>
         </Router>
         <Snackbar />
       </ThemeProvider>

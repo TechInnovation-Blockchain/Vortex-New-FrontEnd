@@ -23,6 +23,10 @@ yarn-debug.log*
 yarn-error.log*
 .idea/*
 task.md
+yarn.lock
 package-lock.json
 
-.eslintrc
+.reg
+.loki
+
+.env

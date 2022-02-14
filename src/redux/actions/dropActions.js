@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { BASE_URL } from '../../config/constants'
+import { BASE_URL } from '../../constants'
 import { logError, logMessage } from '../../utils/log'
 import * as dropTypes from '../types/dropTypes'
 import { authError } from './authActions'
